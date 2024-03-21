@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+<script>    
+function openBlockModal(button) {
+        // Find the closest parent row
+        var row = button.closest('tr');
+        var statusSpan = row.querySelector('.badge');
+        
+        // Set up the event listener for the "Block" button inside the modal
+        var blockButton = row.querySelector('.btn-danger-inside');
+      
+        blockButton.onclick = function () {
+            // Find the span within the same row and update its content
+          if(statusSpan.textContent === "Active"){
+            currentStatus = 'Blocked';
+          
+            statusSpan.classList.remove('text-bg-success');
+            statusSpan.classList.add('text-bg-danger');
+            statusSpan.innerHTML = 'Blocked';
+            button.classList.remove('text-bg-danger');
+            button.classList.add('text-bg-success');
+            button.innerHTML = 'Unblock';
+          }else{
+            currentStatus = 'Active';
+        
+            statusSpan.classList.remove('text-bg-danger');
+            statusSpan.classList.add('text-bg-success');
+            statusSpan.innerHTML = 'Active';
+            button.classList.remove('text-bg-success');
+            button.classList.add('text-bg-danger');
+            button.innerHTML = 'Block';
+          }
+        };
+    }
+    function checkFileType() {
+    var fileInput = document.getElementById('formFileSm');
+    var file = fileInput.files[0];
+    var imageContainer = document.getElementById('imageContainer');
+   
+
+    if (file) {
+        var fileType = file.type;
+        var validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+        if (validImageTypes.includes(fileType)) {
+            // Hiển thị hình ảnh (đối với mục đích minh họa)
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = new Image();
+                img.src = e.target.result;
+                imageContainer.innerHTML = ''; // Xóa nội dung cũ của container
+                imageContainer.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert('Chỉ chấp nhận các tệp hình ảnh có định dạng JPEG, PNG hoặc GIF.');
+            fileInput.value = '';
+            imageContainer.innerHTML = '';
+        }
+    }
+}
+
+function checkFileTypeAdd() {
+    var fileInput = document.getElementsByClassName('.formFile');
+    var file = fileInput.files[0];
+    var imageContainer = document.getElementsByClassName('.imageOutput');
+   
+
+    if (file) {
+        var fileType = file.type;
+        var validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+        if (validImageTypes.includes(fileType)) {
+            // Hiển thị hình ảnh (đối với mục đích minh họa)
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = new Image();
+                img.src = e.target.result;
+                imageContainer.innerHTML = ''; // Xóa nội dung cũ của container
+                imageContainer.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert('Chỉ chấp nhận các tệp hình ảnh có định dạng JPEG, PNG hoặc GIF.');
+            fileInput.value = '';
+            imageContainer.innerHTML = '';
+        }
+    }
+}
+
+
+
+function deleteRow(button){
+  var row = button.closest('tr');
+  var blockButton = row.querySelector('.btn-danger-inside');
+  
+  blockButton.onclick = function () {
+    row.remove(row);
+  }
+}
+
+
+
+</script>
+<style>
+    .nav-pills .nav-item.show .nav-link, .nav-pills .nav-link.active {
+        background-color: grey;
+    }
+    .nav-pills .nav-link {
+      color: black; 
+    }
+
+    .img-fluid img{
+    width:25%;
+  }
+</style>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center">
+          <a class="navbar-brand ms-4 me-5" href="#">
+            <img src="img/logo.png" width="60">
+          </a>          
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                <ul class="nav nav-pills " id="pills-tab" role="tablist">
+                    <li class="nav-item m-3 " role="presentation">
+                      <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Administrator</button>
+                    </li>
+                    <li class="nav-item m-3 " role="presentation">
+                      <button class="nav-link " id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Customer</button>
+                    </li>
+                    <li class="nav-item m-3 " role="presentation">
+                      <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Product</button>
+                    </li>
+                    <li class="nav-item m-3 " role="presentation">
+                      <button class="nav-link" id="pills-order-tab" data-bs-toggle="pill" data-bs-target="#pills-order" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Order</button>
+                    </li>
+                  </ul>
+              </div>
+            </div>
+              <div class="d-flex align-items-center">
+          <div class="navbar-brand ml-auto">
+            <span class="badge text-bg-success p-2 ">Hello, Admin</span>
+            </div>
+            <div class="navbar-brand ml-auto">
+            <a href="AdminLogin.html" class="navbar-brand">   
+            <svg src="icons/box-arrow-right.svg" width="40" height="50" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
+                <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+              </svg>
+            </a>   
+            </div>   
+            </div>
+        </div>
+      </nav>
+
+      <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+            <h1 class="h1 mt-2 ms-3 display-5 fw-bold">Administrator</span></h1>
+           <!-- Button trigger modal -->
+        <button type="button" class="btn btn-success ms-3 mt-2 " data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            <svg src="icons/person-plus-fill.svg" width="22"  fill="currentColor" class="bi bi-person-plus-fill mb-1 me-1" viewBox="0 0 16 16">
+            <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+            <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
+        </svg>
+            Add Administrator
+        </button>
+  
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable">
+             <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 fw-bold" id="staticBackdropLabel">Add Administrator</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!--Form add admin-->
+                    <form action="" >
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control fw-bold" id="floatingInput" placeholder="ID" value="#AD" autocomplete="off" required>
+                        <label for="floatingInput">ID</label>
+                      </div>
+                      <div class="form-floating mb-3">
+                        <input type="text" class="form-control fw-bold" id="floatingName" placeholder="Fullname" autocomplete="off" required>
+                        <label for="floatingName">FullName</label>
+                      </div>
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control fw-bold" id="floatingInput" placeholder="name@example.com" autocomplete="off" equired>
+                        <label for="floatingInput">Email address</label>
+                      </div>
+                      <div class="form-floating mb-3">
+                        <input type="text" class="form-control fw-bold" id="floatingInput" placeholder="phonenumber" autocomplete="off" required>
+                        <label for="floatingInput">Phone Number</label>
+                      </div>
+                      <div class="form-floating">
+                        <select class="form-select fw-bold" id="floatingSelect" aria-label="Floating label select example">
+                          <option selected>Open this select menu</option>
+                          <option value="1"> Administrative manager</option>
+                          <option value="2"> Product manager</option>
+                          <option value="3"> Customer manager</option>
+                          <option value="3"> Order manager</option>
+                        </select>
+                        <label for="floatingSelect">Role</label>
+                      </div>
+
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Add</button>
+                  </div>
+                  </form>
+                
+            </div>
+          </div>
+        </div>
+
+
+
+            <div class="container-fluid">
+            <table class="table table-hover mt-2">
+                <thead class="fs-5">
+                    <tr class="">
+                        <th scope="col">ID</th>
+                        <th scope="col">Full Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Phone Number</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Edit</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    <tr class="">
+                        <td>#AD01</td>
+                        <td>Nguyen Minh Quan</td>
+                        <td>admin1@gmail.com</td>
+                        <td>0123456789</td>
+                        <td>
+                            <span class="badge text-bg-success rounded-pill">Active</span>
+                        </td>
+                        <td>Administrative manager</td>
+                        <td>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#admin1">
+                                Edit
+                            </button>
+  
+                                <!-- Modal -->
+                            <div class="modal fade" id="admin1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit</h1>
+                                            <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <!--Form edit -->
+                                            <form action="" method="post">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control fw-bold" id="floatingInput" placeholder="ID" value="#AD" autocomplete="off" required>
+                                                <label for="floatingInput">ID</label>
+                                              </div>
+                                              <div class="form-floating mb-3">
+                                                <input type="text" class="form-control fw-bold" id="floatingName" placeholder="Fullname" autocomplete="off" required>
+                                                <label for="floatingName">FullName</label>
+                                              </div>
+                                            <div class="form-floating mb-3">
+                                                <input type="email" class="form-control fw-bold" id="floatingInput" placeholder="name@example.com" autocomplete="off" required> 
+                                                <label for="floatingInput">Email address</label>
+                                              </div>
+                                              <div class="form-floating mb-3">
+                                                <input type="text" class="form-control fw-bold" id="floatingInput" placeholder="phonenumber" autocomplete="off" required>
+                                                <label for="floatingInput">Phone Number</label>
+                                              </div>
+                                              <div class="form-floating">
+                                                <select class="form-select fw-bold" id="floatingSelect" aria-label="Floating label select example">
+                                                  <option selected>Open this select menu</option>
+                                                  <option value="1"> Administrative manager</option>
+                                                  <option value="2"> Product manager</option>
+                                                  <option value="3"> Customer manager</option>
+                                                  <option value="3"> Order manager</option>
+                                                </select>
+                                                <label for="floatingSelect">Role</label>
+                                              </div>
+
+
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-success">Update</button>
+                                        </div>
+                                      </form>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-danger mb-1 btn-danger-outside" data-bs-toggle="modal" data-bs-target="#A1" onclick="openBlockModal(this)">
+                              Block
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="A1" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="ModalLabel">Change Admin Status</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    Are you sure to continue this step?
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-danger mb-1 btn-danger-inside"  data-bs-dismiss="modal">OK</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                           
+                        </td>
+                    </tr>
+                    <tr class="">
+                        <td>#AD02</td>
+                        <td>Huynh Le Hoang Tuan</td>
+                        <td>admin2@gmail.com</td>
+                        <td>0123456789</td>
+                        <td>
+                            <span class="badge text-bg-success rounded-pill" >Active</span>
+                        </td>
+                        <td>Product manager</td>
+                        <td>
+                             <!-- Button trigger modal -->
+                             <button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#admin2">
+                                Edit
+                            </button>
+  
+                                <!-- Modal -->
+                            <div class="modal fade" id="admin2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit</h1>
+                                            <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <!--Form edit -->
+                                            <form action="" method="post">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control fw-bold" id="floatingInput" placeholder="ID" value="#AD" autocomplete="off" required>
+                                                <label for="floatingInput">ID</label>
+                                              </div>
+                                              <div class="form-floating mb-3">
+                                                <input type="text" class="form-control fw-bold" id="floatingName" placeholder="Fullname" autocomplete="off" required>
+                                                <label for="floatingName">FullName</label>
+                                              </div>
+                                            <div class="form-floating mb-3">
+                                                <input type="email" class="form-control fw-bold" id="floatingInput" placeholder="name@example.com" autocomplete="off" required>
+                                                <label for="floatingInput">Email address</label>
+                                              </div>
+                                              <div class="form-floating mb-3">
+                                                <input type="text" class="form-control fw-bold" id="floatingInput" placeholder="phonenumber" autocomplete="off" required>
+                                                <label for="floatingInput">Phone Number</label>
+                                              </div>
+                                              <div class="form-floating">
+                                                <select class="form-select fw-bold" id="floatingSelect" aria-label="Floating label select example">
+                                                  <option selected>Open this select menu</option>
+                                                  <option value="1"> Administrative manager</option>
+                                                  <option value="2"> Product manager</option>
+                                                  <option value="3"> Customer manager</option>
+                                                  <option value="3"> Order manager</option>
+                                                </select>
+                                                <label for="floatingSelect">Role</label>
+                                              </div>
+
+
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-success">Update</button>
+                                        </div>
+                                      </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-danger mb-1 btn-danger-outside" data-bs-toggle="modal" data-bs-target="#A2" onclick="openBlockModal(this)">
+                              Block
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="A2" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="ModalLabel">Change Admin Status</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    Are you sure to continue this step?
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-danger mb-1 btn-danger-inside"  data-bs-dismiss="modal">OK</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          
+                         
+                           
+                        </td>
+                    </tr>
+                    <tr class="">
+                        <td>#AD03</td>
+                        <td>Nguyen Huynh Truc Lam</td>
+                        <td>admin3@gmail.com</td>
+                        <td>0123456789</td>
+                        <td>
+                            <span class="badge text-bg-success rounded-pill" class="status">Active</span>
+                        </td>
+                        <td>Customer Manager</td>
+                        <td>
+                             <!-- Button trigger modal -->
+                             <button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#admin3">
+                                Edit
+                            </button>
+  
+                                <!-- Modal -->
+                            <div class="modal fade" id="admin3" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit</h1>
+                                            <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <!--Form edit -->
+                                            <form action="" method="post">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control fw-bold" id="floatingInput" placeholder="ID" value="#AD" autocomplete="off" required>
+                                                <label for="floatingInput">ID</label>
+                                              </div>
+                                              <div class="form-floating mb-3">
+                                                <input type="text" class="form-control fw-bold" id="floatingName" placeholder="Fullname" autocomplete="off" required>
+                                                <label for="floatingName">FullName</label>
+                                              </div>
+                                            <div class="form-floating mb-3">
+                                                <input type="email" class="form-control fw-bold" id="floatingInput" placeholder="name@example.com" autocomplete="off" required>
+                                                <label for="floatingInput">Email address</label>
+                                              </div>
+                                              <div class="form-floating mb-3">
+                                                <input type="text" class="form-control fw-bold" id="floatingInput" placeholder="phonenumber" autocomplete="off" required>
+                                                <label for="floatingInput">Phone Number</label>
+                                              </div>
+                                              <div class="form-floating">
+                                                <select class="form-select fw-bold" id="floatingSelect" aria-label="Floating label select example">
+                                                  <option selected>Open this select menu</option>
+                                                  <option value="1"> Administrative manager</option>
+                                                  <option value="2"> Product manager</option>
+                                                  <option value="3"> Customer manager</option>
+                                                  <option value="3"> Order manager</option>
+                                                </select>
+                                                <label for="floatingSelect">Role</label>
+                                              </div>
+
+
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-success">Update</button>
+                                        </div>
+                                      </form>
+                                    </div>
+                                </div>
+                            </div>
+                            
+
+                            
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-danger mb-1 btn-danger-outside" data-bs-toggle="modal" data-bs-target="#A3" onclick="openBlockModal(this)">
+                              Block
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="A3" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="ModalLabel">Change Admin Status</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    Are you sure to continue this step?
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-danger mb-1 btn-danger-inside"  data-bs-dismiss="modal">OK</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                           
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+            
+
+        </div>
+        
+       
+        
+
+
+        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+          <h1 class="h1 mt-2 ms-3 display-5 fw-bold">Customer</span></h1>
+
+               <!-- Button trigger modal -->
+        <button type="button" class="btn btn-success ms-3 mt-2 " data-bs-toggle="modal" data-bs-target="#addUser">
+            <svg src="icons/person-plus-fill.svg" width="22"  fill="currentColor" class="bi bi-person-plus-fill mb-1 me-1" viewBox="0 0 16 16">
+            <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+            <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
+        </svg>
+            Add Customer
+        </button>
+  
+        <!-- Modal -->
+        <div class="modal fade" id="addUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable">
+             <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 fw-bold" id="staticBackdropLabel">Add User</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!--Form add user-->
+                    <form action="" method="post">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control fw-bold" id="floatingInput" placeholder="ID" autocomplete="off" required>
+                        <label for="floatingInput">User Name</label>
+                      </div>
+                      <div class="form-floating mb-3">
+                        <input type="date" class="form-control fw-bold" id="floatingName" placeholder="Fullname" autocomplete="off" required>
+                        <label for="floatingName">Day Of Birth</label>
+                      </div>
+                      <div class="form-floating mb-3">
+                        <select class="form-select fw-bold" id="floatingSelect" aria-label="Floating label select example">
+                          <option selected>Open this select menu</option>
+                          <option value="1"> Male</option>
+                          <option value="2"> Female</option>
+                        </select>
+                        <label for="floatingSelect">Gender</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control fw-bold" id="floatingInput" placeholder="name@example.com" autocomplete="off" required>
+                        <label for="floatingInput">Email address</label>
+                      </div>
+                      <div class="form-floating mb-3">
+                        <input type="text" class="form-control fw-bold" id="floatingInput" placeholder="phonenumber" autocomplete="off" required>
+                        <label for="floatingInput">Phone Number</label>
+                      </div>
+                      <div class="form-floating">
+                        <input type="text" class="form-control fw-bold" id="floatingInput" placeholder="phonenumber" autocomplete="off" required>
+                        <label for="floatingInput">Address</label>
+                      </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Add</button>
+                 </div>
+                </form>
+            </div>
+          </div>
+        </div>
+
+            <div class="container-fluid">
+            <table class="table table-hover">
+                <thead class="fs-5">
+                <tr>
+                    <th scope="col">User Name</th>
+                    <th scope="col">Day Of Birth</th>
+                    <th scope="col">Gender</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone Number</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Edit</th>
+                </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                <tr>
+                    <td>SkyWind</td>
+                    <td>21/07/2000</td>
+                    <td>Male</td>
+                    <td>admin1@gmail.com</td>
+                    <td>0123456789</td>
+                    <td>123 NTH, phuong 1, GV</td>
+                    <td>
+                        <span class="badge text-bg-success rounded-pill" class="status">Active</span>
+                    </td>
+                    <td>
+                        
+                         <!-- Button trigger modal -->
+                         <button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#user1">
+                            Edit
+                        </button>
+
+                            <!-- Modal -->
+                        <div class="modal fade" id="user1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit</h1>
+                                        <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <!--Form edit -->
+                                        <form action="" method="post">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control fw-bold" id="floatingInput" placeholder="ID" autocomplete="off" required>
+                                            <label for="floatingInput">User Name</label>
+                                          </div>
+                                          <div class="form-floating mb-3">
+                                            <input type="date" class="form-control fw-bold" id="floatingName" placeholder="Fullname" autocomplete="off" required>
+                                            <label for="floatingName">Day Of Birth</label>
+                                          </div>
+                                          <div class="form-floating mb-3">
+                                            <select class="form-select fw-bold" id="floatingSelect" aria-label="Floating label select example">
+                                              <option selected>Open this select menu</option>
+                                              <option value="1"> Male</option>
+                                              <option value="2"> Female</option>
+                                            </select>
+                                            <label for="floatingSelect">Gender</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input type="email" class="form-control fw-bold" id="floatingInput" placeholder="name@example.com" autocomplete="off" required>
+                                            <label for="floatingInput">Email address</label>
+                                          </div>
+                                          <div class="form-floating mb-3">
+                                            <input type="text" class="form-control fw-bold" id="floatingInput" placeholder="phonenumber" autocomplete="off" required>
+                                            <label for="floatingInput">Phone Number</label>
+                                          </div>
+                                          <div class="form-floating">
+                                            <input type="text" class="form-control fw-bold" id="floatingInput" placeholder="phonenumber" autocomplete="off" required>
+                                            <label for="floatingInput">Address</label>
+                                          </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-success">Update</button>
+                                    </div>
+                                  </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                        <button type="button" class="btn btn-danger mb-1 btn-danger-outside" data-bs-toggle="modal" data-bs-target="#C1" onclick="openBlockModal(this)">
+                          Block
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="C1" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="ModalLabel">Change Admin Status</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                Are you sure to continue this step?
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-danger mb-1 btn-danger-inside"  data-bs-dismiss="modal">OK</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                       
+                    </td>
+                </tr>
+                <tr>
+                    <td>SkyWind</td>
+                    <td>21/07/2000</td>
+                    <td>Male</td>
+                    <td>admin1@gmail.com</td>
+                    <td>0123456789</td>
+                    <td>123 NTH, phuong 1, GV</td>
+                    <td>
+                        <span class="badge text-bg-success rounded-pill" class="status">Active</span>
+                    </td>
+                    <td>
+                        
+                         <!-- Button trigger modal -->
+                         <button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#user2">
+                            Edit
+                        </button>
+
+                            <!-- Modal -->
+                        <div class="modal fade" id="user2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit</h1>
+                                        <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <!--Form edit -->
+                                        <form action="" method="post">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control fw-bold" id="floatingInput" placeholder="ID" autocomplete="off" required>
+                                            <label for="floatingInput">User Name</label>
+                                          </div>
+                                          <div class="form-floating mb-3">
+                                            <input type="date" class="form-control fw-bold" id="floatingName" placeholder="Fullname" autocomplete="off" required>
+                                            <label for="floatingName">Day Of Birth</label>
+                                          </div>
+                                          <div class="form-floating mb-3">
+                                            <select class="form-select fw-bold" id="floatingSelect" aria-label="Floating label select example">
+                                              <option selected>Open this select menu</option>
+                                              <option value="1"> Male</option>
+                                              <option value="2"> Female</option>
+                                            </select>
+                                            <label for="floatingSelect">Gender</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input type="email" class="form-control fw-bold" id="floatingInput" placeholder="name@example.com" autocomplete="off" required>
+                                            <label for="floatingInput">Email address</label>
+                                          </div>
+                                          <div class="form-floating mb-3">
+                                            <input type="text" class="form-control fw-bold" id="floatingInput" placeholder="phonenumber" autocomplete="off" required>
+                                            <label for="floatingInput">Phone Number</label>
+                                          </div>
+                                          <div class="form-floating">
+                                            <input type="text" class="form-control fw-bold" id="floatingInput" placeholder="phonenumber" autocomplete="off" required>
+                                            <label for="floatingInput">Address</label>
+                                          </div>
+
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-success">Update</button>
+                                    </div>
+                                  </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                        <button type="button" class="btn btn-danger mb-1 btn-danger-outside" data-bs-toggle="modal" data-bs-target="#C2" onclick="openBlockModal(this)">
+                          Block
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="C2" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="ModalLabel">Change Admin Status</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                Are you sure to continue this step?
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-danger mb-1 btn-danger-inside"  data-bs-dismiss="modal">OK</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                       
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        </div>
+
+
+
+
+
+
+
+
+
+        <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
+          <h1 class="h1 mt-2 ms-3 display-5 fw-bold">Product</span></h1>
+            <button type="button" class="btn btn-success ms-3 mt-2 " data-bs-toggle="modal" data-bs-target="#staticProduct">
+              <svg src="icons/plus-lg.svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg mb-1" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+              </svg>
+              Add Product
+          </button>
+    
+          <!-- Modal -->
+          <div class="modal fade" id="staticProduct" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropProduct" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+               <div class="modal-content">
+                  <div class="modal-header">
+                      <h1 class="modal-title fs-5 fw-bold" id="staticBackdropProduct">Add Product</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <!--Form add product-->
+                      <form action="" >
+                      <div class="form-floating mb-3">
+                          <input type="text" class="form-control fw-bold" id="floatingInput" placeholder="ID" value="#" autocomplete="off" required>
+                          <label for="floatingInput">Product Code</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control fw-bold" id="floatingName" placeholder="Fullname" autocomplete="off" required>
+                          <label for="floatingName">Product Name</label>
+                        </div>
+                      <div class="form-floating mb-3">
+                          <input type="number" class="form-control fw-bold" id="floatingInput" placeholder="" autocomplete="off" equired>
+                          <label for="floatingInput">Price</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                          <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+                          <label for="floatingTextarea">Noted</label>
+                        </div>
+                        <div class=" mb-3">
+                          <input class="form-control form-control-sm mb-3" id="formFile" type="file" accept="image/*"  onchange="checkFileTypeAdd()" required>
+                          <div class="img-fluid" id="imageOutput"></div>
+                         </div>
+                        <span class="badge text-bg-primary mb-3 fs-5">Description</span>
+                        <div class="form-floating mb-3">
+                         <input type="email" class="form-control fw-bold" id="floatingHashrate" placeholder="" autocomplete="off" required>
+                         <label for="floatingHashrate">Hashrate</label>
+                       </div>
+                       <div class="form-floating mb-3">
+                         <input type="text" class="form-control fw-bold" id="floatingPower" placeholder="" autocomplete="off" required>
+                         <label for="floatingPower">Power</label>
+                       </div>
+                       <div class="form-floating mb-3">
+                         <input type="text" class="form-control fw-bold" id="floatingMinerSize" placeholder="" autocomplete="off" required>
+                         <label for="floatingMinerSize">Miner Size	</label>
+                       </div>
+                       <div class="form-floating mb-3">
+                         <input type="text" class="form-control fw-bold" id="floatingNetWeight" placeholder="" autocomplete="off" required>
+                         <label for="floatingNetWeight">Net Weight	</label>
+                       </div>
+                       <div class="form-floating mb-3">
+                         <input type="text" class="form-control fw-bold" id="floatingConnection" placeholder="" autocomplete="off" required>
+                         <label for="floatingConnection">Connection</label>
+                       </div>
+                       <div class="form-floating mb-3">
+                         <input type="text" class="form-control fw-bold" id="floatingVoltageInput" placeholder="" autocomplete="off" required>
+                         <label for="floatingVoltageInput">Voltage Input	</label>
+                       </div>
+                       <div class="form-floating mb-3">
+                         <input type="text" class="form-control fw-bold" id="floatingTemp" placeholder="" autocomplete="off" required>
+                         <label for="floatingTemp">Operating Temp	</label>
+                       </div>
+                        
+  
+                      
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-success">Add</button>
+                    </div>
+                    </form>
+                  
+              </div>
+            </div>
+          </div>
+            <div class="container-fluid">
+            <table class="table">
+                <thead class="fs-5">
+                    <tr>
+                        <th scope="col">Product Code</th>
+                        <th scope="col">Product Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Picture</th>
+                        <th scope="col">Edit</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    <tr class=" align-middle">
+                        <td>#IRKASKS0PRO</td>
+                        <td>ICERIVER KAS KSO PRO</td>
+                        <td>$499</td>
+                        <td><img src="img/KS0PRO.jpg" class="img-fluid rounded" alt="ICERIVER KAS KSO PRO" width="100"></td>
+                        <td>
+                           
+                        
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#product1">
+                                   Edit
+                               </button>
+       
+                                   <!-- Modal -->
+                               <div class="modal fade" id="product1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                   <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                                       <div class="modal-content">
+                                           <div class="modal-header">
+                                               <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit</h1>
+                                               <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+                                           </div>
+                                           <div class="modal-body">
+       
+                                               <!--Form edit -->
+                                               <form action="" method="post">
+                                               <div class="form-floating mb-3">
+                                                   <input type="text" class="form-control fw-bold" id="floatingInput" placeholder="ID" value="#" autocomplete="off" required>
+                                                   <label for="floatingInput">Product Code</label>
+                                                 </div>
+                                                 <div class="form-floating mb-3">
+                                                   <input type="text" class="form-control fw-bold" id="floatingName" placeholder="Fullname" autocomplete="off" required>
+                                                   <label for="floatingName">Product Name</label>
+                                                 </div>
+                                                 
+                                               <div class="form-floating mb-3">
+                                                   <input type="number" class="form-control fw-bold" id="floatingInput" placeholder="price" min="0" autocomplete="off" required>
+                                                   <label for="floatingInput">Price</label>
+                                                 </div>
+                                                 <div class="form-floating mb-3">
+                                                  <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+                                                  <label for="floatingTextarea">Noted</label>
+                                                </div>
+                                                 <div class=" mb-3">
+                                                  <input class="form-control form-control-sm mb-3 formFileSm" type="file" accept="image/*"  onchange="checkFileType()" required>
+                                                  <div class="img-fluid imageContainer"></div>
+                                                 </div>
+                                                 <span class="badge text-bg-primary mb-3 fs-5">Description</span>
+                                                 <div class="form-floating mb-3">
+                                                  <input type="email" class="form-control fw-bold" id="floatingHashrate" placeholder="" autocomplete="off" required>
+                                                  <label for="floatingHashrate">Hashrate</label>
+                                                </div>
+                                                <div class="form-floating mb-3">
+                                                  <input type="text" class="form-control fw-bold" id="floatingPower" placeholder="" autocomplete="off" required>
+                                                  <label for="floatingPower">Power</label>
+                                                </div>
+                                                <div class="form-floating mb-3">
+                                                  <input type="text" class="form-control fw-bold" id="floatingMinerSize" placeholder="" autocomplete="off" required>
+                                                  <label for="floatingMinerSize">Miner Size	</label>
+                                                </div>
+                                                <div class="form-floating mb-3">
+                                                  <input type="text" class="form-control fw-bold" id="floatingNetWeight" placeholder="" autocomplete="off" required>
+                                                  <label for="floatingNetWeight">Net Weight	</label>
+                                                </div>
+                                                <div class="form-floating mb-3">
+                                                  <input type="text" class="form-control fw-bold" id="floatingConnection" placeholder="" autocomplete="off" required>
+                                                  <label for="floatingConnection">Connection</label>
+                                                </div>
+                                                <div class="form-floating mb-3">
+                                                  <input type="text" class="form-control fw-bold" id="floatingVoltageInput" placeholder="" autocomplete="off" required>
+                                                  <label for="floatingVoltageInput">Voltage Input	</label>
+                                                </div>
+                                                <div class="form-floating mb-3">
+                                                  <input type="text" class="form-control fw-bold" id="floatingTemp" placeholder="" autocomplete="off" required>
+                                                  <label for="floatingTemp">Operating Temp	</label>
+                                                </div>
+       
+                                           </div>
+                                           <div class="modal-footer">
+                                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                               <button type="submit" class="btn btn-success">Update</button>
+                                           </div>
+                                          </form>
+                                       </div>
+                                   </div>
+                               </div>
+                               
+       
+                              <!-- Button trigger modal -->
+                              <button type="button" class="btn btn-danger btn-danger-outside mb-1" data-bs-toggle="modal" data-bs-target="#pro1" onclick="deleteRow(this)">
+                                Delete
+                              </button>
+
+                              <!-- Modal -->
+                              <div class="modal fade" id="pro1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                      Are you sure to continue this step?
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                      <button type="button" class="btn btn-danger btn-danger-inside" data-bs-dismiss="modal">OK</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                        </td>
+                    </tr>
+
+                    <tr class=" align-middle">
+                      <td>#IRKASKS1</td>
+                      <td>ICERIVER KAS KS1</td>
+                      <td>$499</td>
+                      <td><img src="img/KS0PRO.jpg" class="img-fluid rounded" alt="ICERIVER KAS KSO PRO" width="100"></td>
+                      <td>
+                         
+                      
+                              <!-- Button trigger modal -->
+                              <button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#product2">
+                                 Edit
+                             </button>
+     
+                                 <!-- Modal -->
+                             <div class="modal fade" id="product2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                                     <div class="modal-content">
+                                         <div class="modal-header">
+                                             <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit</h1>
+                                             <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+                                         </div>
+                                         <div class="modal-body">
+     
+                                             <!--Form edit -->
+                                             <form action="" method="post">
+                                             <div class="form-floating mb-3">
+                                                 <input type="text" class="form-control fw-bold" id="floatingInput" placeholder="ID" value="#" autocomplete="off" required>
+                                                 <label for="floatingInput">Product Code</label>
+                                               </div>
+                                               <div class="form-floating mb-3">
+                                                 <input type="text" class="form-control fw-bold" id="floatingName" placeholder="Fullname" autocomplete="off" required>
+                                                 <label for="floatingName">Product Name</label>
+                                               </div>
+                                               
+                                             <div class="form-floating mb-3">
+                                                 <input type="number" class="form-control fw-bold" id="floatingInput" placeholder="price" min="0" autocomplete="off" required>
+                                                 <label for="floatingInput">Price</label>
+                                               </div>
+                                               <div class="form-floating mb-3">
+                                                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+                                                <label for="floatingTextarea">Noted</label>
+                                              </div>
+                                               <div class=" mb-3">
+                                                <input class="form-control form-control-sm mb-3" id="formFileSm" type="file" accept="image/*"  onchange="checkFileType()" required>
+                                                <div class="img-fluid" id="imageContainer"></div>
+                                               </div>
+                                               <span class="badge text-bg-primary mb-3 fs-5">Description</span>
+                                               <div class="form-floating mb-3">
+                                                <input type="email" class="form-control fw-bold" id="floatingHashrate" placeholder="" autocomplete="off" required>
+                                                <label for="floatingHashrate">Hashrate</label>
+                                              </div>
+                                              <div class="form-floating mb-3">
+                                                <input type="text" class="form-control fw-bold" id="floatingPower" placeholder="" autocomplete="off" required>
+                                                <label for="floatingPower">Power</label>
+                                              </div>
+                                              <div class="form-floating mb-3">
+                                                <input type="text" class="form-control fw-bold" id="floatingMinerSize" placeholder="" autocomplete="off" required>
+                                                <label for="floatingMinerSize">Miner Size	</label>
+                                              </div>
+                                              <div class="form-floating mb-3">
+                                                <input type="text" class="form-control fw-bold" id="floatingNetWeight" placeholder="" autocomplete="off" required>
+                                                <label for="floatingNetWeight">Net Weight	</label>
+                                              </div>
+                                              <div class="form-floating mb-3">
+                                                <input type="text" class="form-control fw-bold" id="floatingConnection" placeholder="" autocomplete="off" required>
+                                                <label for="floatingConnection">Connection</label>
+                                              </div>
+                                              <div class="form-floating mb-3">
+                                                <input type="text" class="form-control fw-bold" id="floatingVoltageInput" placeholder="" autocomplete="off" required>
+                                                <label for="floatingVoltageInput">Voltage Input	</label>
+                                              </div>
+                                              <div class="form-floating mb-3">
+                                                <input type="text" class="form-control fw-bold" id="floatingTemp" placeholder="" autocomplete="off" required>
+                                                <label for="floatingTemp">Operating Temp	</label>
+                                              </div>
+     
+                                         </div>
+                                         <div class="modal-footer">
+                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                             <button type="submit" class="btn btn-success">Update</button>
+                                         </div>
+                                        </form>
+                                     </div>
+                                 </div>
+                             </div>
+                             
+     
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-danger btn-danger-outside mb-1" data-bs-toggle="modal" data-bs-target="#pro2" onclick="deleteRow(this)">
+                              Delete
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="pro2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    Are you sure to continue this step?
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-danger btn-danger-inside" data-bs-dismiss="modal">OK</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                      </td>
+                  </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+
+
+
+
+
+        <div class="tab-pane fade" id="pills-order" role="tabpanel" aria-labelledby="pills-disabled-tab" tabindex="0">
+          <h1 class="h1 mt-2 ms-3 display-5 fw-bold">Order</span></h1>
+            <div class="container-fluid mt-4">
+              <table class="table table-hover">
+                <thead class="fs-5">
+                  <tr>
+                    <th scope="col">Order ID</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Order Date</th>
+                    <th scope="col">Delivery Date</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Details</th>
+                    <th scope="col">Edit</th>
+                  </tr>
+                </thead>
+                <tbody class="table-group-divider align-middle">
+                  <tr>
+                      <td>#ORD01</td>
+                      <td>123 Nguyen Thuong Hien</td>
+                      <td>8/3/2024</td>
+                      <td>14/4/2024</td>
+                      <td>$1214</td>
+                      <td>
+                        <span class="badge text-bg-success rounded-pill" class="status">Confirm</span>
+                      </td>
+                      <td>
+                        <!-- Button trigger modal -->
+                          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Detail1">
+                            Details
+                          </button>
+
+                          <!-- Modal -->
+                          <div class="modal fade" id="Detail1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h1 class="modal-title fs-3" id="staticBackdropLabel">#ORD01</h1>
+                                  <span class="badge rounded-pill text-bg-success ms-2 fs-5">Delivered</span>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                              <div class="modal-body row">
+                                <div class="col-sm-6 border-end border-2">
+                                  <div class="card-body border-bottom border-2 ">
+                                    <h3 class=" h-3 card-title">skywind |<small class="fs-6">+84 123 4567890</small> </h3>
+                                    <h4 class="card-text font-monospace mt-2">273 An Duong Vuong </h4>
+                                    <h4 class="card-text font-monospace mb-3">Phuong 3,Quan 5,Ho Chi Minh City,Viet Nam</h4>
+                                  </div>
+                                  <div class=" d-inline-flex flex-column">
+                                    <div class="h4 mt-3 pb-1  ">
+                                      Payment 
+                                    <span class="badge rounded-pill text-bg-primary ms-1 ">Cash On Delivery (COD)</span>
+                                    </div>
+                                    <div class="h4 mt-1 pb-1 ">
+                                      Delivery Date
+                                     <span class="badge rounded-pill text-bg-primary ms-1 ">14:30:57 24/11/2023</span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-sm-6">
+                                  <table class="table table-borderless">
+                                    <tbody>
+                                      <tr class="align-middle">
+                                        <th><img src="img/KS0PRO.jpg"  alt="KS0 Pro" width="80"> </th>
+                                        <td class="h5">ICERIVER KAS KS0 PRO</td>
+                                        <td class="h5">x1</td>
+                                        <td class="h5">$499</td>
+                                      </tr>
+                                      <tr class="align-middle">
+                                        <th class="pb-4"><img src="img/BMS21.jpg" alt="BMS21" width="80"></th>
+                                        <td class="h5">BITMAIN ANTMINER S21</td>
+                                        <td class="h5">x1</td>
+                                        <td class="h5">$4,099</td>
+                                      </tr>
+                                      <tr class="border-top border-0 border-2">
+                                        <td class="h3">Total</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="h3">	$4,598	</td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                               </div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <select class="form-select" aria-label="Default select example" onchange="ChangeStatus(this)">
+                          <option selected>Change Order Status</option>
+                          <option value="1">Confirmed</option>
+                          <option value="2">Delivered</option>
+                          <option value="3">Cancelled</option>
+                        </select>
+                      </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
+     
+<script src="js/bootstrap.bundle.min.js"></script>      
+</body>
+</html>
+
